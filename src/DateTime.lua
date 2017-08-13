@@ -9,8 +9,8 @@ dateTime.difference = function(a, b)
 -- doesn't cope with half-hour and quarter-hour time zones
 -- only works for same month
   local timeInSecs = function (d) 
-    return (d.hour * 3600) + (d.minute * 60) + d.second +
-            (d.millisecond / 1000) + (d.tzHour * 3600) 
+    return (d.time.hour * 3600) + (d.time.minute * 60) + d.time.second +
+            (d.time.millisecond / 1000) + (d.zone.hour * 3600) 
   end
   local aSecs = timeInSecs(a) + ((a.day - b.day) * 24 * 3600)
   local bSecs = timeInSecs(b)  
@@ -25,7 +25,10 @@ dateTime.fromRebol = function (rebolDate)
   local takeNumber = function (s, l) 
     return tonumber(take(s, l))
   end
-  local date = {}
+  local date = {
+    time = {},
+    zone = {}
+  }
   local dateStart = 1
   local timeStart = rebolDate:find('/') + 1
   local zoneStart = rebolDate:find('+') 
@@ -42,12 +45,12 @@ dateTime.fromRebol = function (rebolDate)
   date.year = takeNumber(yearStart, 4)
   date.month = dateMonths[take(monthStart, 3)]
   date.day = takeNumber(1, dayLength)
-  date.hour = takeNumber(timeStart, hourLength)
-  date.minute = takeNumber(minuteStart, 2)
-  date.second = takeNumber(secondStart, 2)
-  date.millisecond = takeNumber(millisecondStart, millisecondLength)
-  date.tzHour = takeNumber(zoneStart, zoneHourlength)
-  date.tzMinute = takeNumber(zoneMinuteStart, 2)
+  date.time.hour = takeNumber(timeStart, hourLength)
+  date.time.minute = takeNumber(minuteStart, 2)
+  date.time.second = takeNumber(secondStart, 2)
+  date.time.millisecond = takeNumber(millisecondStart, millisecondLength)
+  date.zone.hour = takeNumber(zoneStart, zoneHourlength)
+  date.zone.minute = takeNumber(zoneMinuteStart, 2)
   return date
 end
 

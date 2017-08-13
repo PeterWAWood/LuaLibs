@@ -15,48 +15,48 @@ describe('fromRebol', function ()
     assert.equal(2017, d.year)
     assert.equal(8, d.month)
     assert.equal(12, d.day)
-    assert.equal(8, d.hour)
-    assert.equal(56, d.minute)
-    assert.equal(56, d.second)
-    assert.equal(835, d.millisecond)
-    assert.equal(8, d.tzHour)
-    assert.equal(0, d.tzMinute)
+    assert.equal(8, d.time.hour)
+    assert.equal(56, d.time.minute)
+    assert.equal(56, d.time.second)
+    assert.equal(835, d.time.millisecond)
+    assert.equal(8, d.zone.hour)
+    assert.equal(0, d.zone.minute)
   end)
   it('should import 1-Aug-2017/18:56:56.835+08:00', function ()
     local d = dateTime.fromRebol '1-Aug-2017/18:56:56.835+08:00'
     assert.equal(2017, d.year)
     assert.equal(8, d.month)
     assert.equal(1, d.day)
-    assert.equal(18, d.hour)
-    assert.equal(56, d.minute)
-    assert.equal(56, d.second)
-    assert.equal(835, d.millisecond)
-    assert.equal(8, d.tzHour)
-    assert.equal(0, d.tzMinute)
+    assert.equal(18, d.time.hour)
+    assert.equal(56, d.time.minute)
+    assert.equal(56, d.time.second)
+    assert.equal(835, d.time.millisecond)
+    assert.equal(8, d.zone.hour)
+    assert.equal(0, d.zone.minute)
   end)
   it('should import 1-Aug-2017/8:56:56.835+08:00', function ()
     local d = dateTime.fromRebol '1-Aug-2017/8:56:56.835+08:00'
     assert.equal(2017, d.year)
     assert.equal(8, d.month)
     assert.equal(1, d.day)
-    assert.equal(8, d.hour)
-    assert.equal(56, d.minute)
-    assert.equal(56, d.second)
-    assert.equal(835, d.millisecond)
-    assert.equal(8, d.tzHour)
-    assert.equal(0, d.tzMinute)
+    assert.equal(8, d.time.hour)
+    assert.equal(56, d.time.minute)
+    assert.equal(56, d.time.second)
+    assert.equal(835, d.time.millisecond)
+    assert.equal(8, d.zone.hour)
+    assert.equal(0, d.zone.minute)
   end)
   it('should import 18-Aug-2017/18:56:56.835+08:00', function ()
     local d = dateTime.fromRebol '18-Aug-2017/18:56:56.835+08:00'
     assert.equal(2017, d.year)
     assert.equal(8, d.month)
     assert.equal(18, d.day)
-    assert.equal(18, d.hour)
-    assert.equal(56, d.minute)
-    assert.equal(56, d.second)
-    assert.equal(835, d.millisecond)
-    assert.equal(8, d.tzHour)
-    assert.equal(0, d.tzMinute)
+    assert.equal(18, d.time.hour)
+    assert.equal(56, d.time.minute)
+    assert.equal(56, d.time.second)
+    assert.equal(835, d.time.millisecond)
+    assert.equal(8, d.zone.hour)
+    assert.equal(0, d.zone.minute)
   end)
 end)
 
@@ -64,34 +64,34 @@ describe('difference', function ()
   it('should return 0 if the dates are equal', function ()
     local d = {
       year = 2017, month = 8, day = 12,
-      hour = 8, minute = 56, second = 56, millisecond = 835,
-      tzHour = 8, tzMinute = 0
+      time = {hour = 8, minute = 56, second = 56, millisecond = 835},
+      zone = {hour = 8, minute = 0}
     }
     assert.equal(0, dateTime.difference(d, d))
   end)
   it('should return 1 for two date one second apart on the same day', function ()
     local d = {
       year = 2017, month = 8, day = 12,
-      hour = 8, minute = 56, second = 56, millisecond = 835,
-      tzHour = 8, tzMinute = 0
+      time = {hour = 8, minute = 56, second = 56, millisecond = 835},
+      zone = {hour = 8, minute = 0}
     }
     local e = {
       year = 2017, month = 8, day = 12,
-      hour = 8, minute = 56, second = 57, millisecond = 835,
-      tzHour = 8, tzMinute = 0
+      time = {hour = 8, minute = 56, second = 57, millisecond = 835},
+      zone = {hour = 8, minute = 0}
     }
     assert.equal(1, dateTime.difference(e, d))
   end)
   it('should return less than 1 for two date less than one second', function ()
     local d = {
       year = 2017, month = 8, day = 12,
-      hour = 8, minute = 56, second = 56, millisecond = 835,
-      tzHour = 8, tzMinute = 0
+      time = {hour = 8, minute = 56, second = 56, millisecond = 835},
+      zone = {hour = 8, minute = 0}
     }
     local e = {
       year = 2017, month = 8, day = 12,
-      hour = 8, minute = 56, second = 57, millisecond = 335,
-      tzHour = 8, tzMinute = 0
+      time = {hour = 8, minute = 56, second = 57, millisecond = 335},
+      zone = {hour = 8, minute = 0}
     }
     assert.equal(0.5, dateTime.difference(e, d))
   end)
