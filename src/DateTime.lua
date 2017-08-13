@@ -54,4 +54,19 @@ dateTime.fromRebol = function (rebolDate)
   return date
 end
 
+dateTime.timeFromSeconds = function (secs) 
+  local t = {}
+  local remD
+  local remH
+  local remS
+  remH = secs % 3600
+  t.hour = (secs - remH) / 3600
+  remM = remH % 60
+  t.minute = (remH - remM) / 60
+  remS = remM % 1
+  t.second = remM - remS
+  t.millisecond = remS * 1000
+  return t
+end 
+
 return dateTime
