@@ -1,11 +1,26 @@
 -- © Copyright 2017 Peter W A Wood
-local lfs = require "lfs"
-local dateTime = {}
+package.path = package.path .. ';./?.lua;'
+local Time = require 'Time'
+local Zone = require 'Zone'
 
 local dateMonths = {Jan = 1, Feb = 2, Mar = 3, Apr = 4, May = 5, Jun = 6,
                     Jul = 7, Aug = 8, Sep = 9, Oct = 10, Nov = 11, Dec = 12} 
+
+local Date = {}
+Date.year = 0
+Date.month = 0
+Date.day = 0
+Date.time = Time:new()
+Date.zone = Zone:new()
                     
-dateTime.difference = function(a, b)
+function Date:new (o)
+  o = o or {}   -- create object if user does not provide one
+  setmetatable(o, self)
+  self.__index = self
+  return o
+end
+                                        
+Date.difference = function(a, b)
 -- doesn't cope with half-hour and quarter-hour time zones
 -- only works for same month
   local timeInSecs = function (d) 
@@ -17,7 +32,7 @@ dateTime.difference = function(a, b)
   return aSecs - bSecs
 end
 
-dateTime.fromRebol = function (rebolDate)
+Date.fromRebol = function (rebolDate)
 -- This should be refactored to use LPEG
   local take = function (s, l) 
     return rebolDate:sub(s, s + l - 1)
@@ -26,8 +41,8 @@ dateTime.fromRebol = function (rebolDate)
     return tonumber(take(s, l))
   end
   local date = {
-    time = {},
-    zone = {}
+    time = Time:new(),
+    zone = Zone:new()
   }
   local dateStart = 1
   local timeStart = rebolDate:find('/') + 1
@@ -54,19 +69,4 @@ dateTime.fromRebol = function (rebolDate)
   return date
 end
 
-dateTime.timeFromSeconds = function (secs) 
-  local t = {}
-  local remD
-  local remH
-  local remS
-  remH = secs % 3600
-  t.hour = (secs - remH) / 3600
-  remM = remH % 60
-  t.minute = (remH - remM) / 60
-  remS = remM % 1
-  t.second = remM - remS
-  t.millisecond = remS * 1000
-  return t
-end 
-
-return dateTime
+return Date
